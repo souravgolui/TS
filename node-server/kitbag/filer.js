@@ -30,7 +30,9 @@ module.exports.deleteItem = function (item, callback) {
   var params = {
     Bucket: config.AWS_BUCKET,
     Delete: {
-      Objects: [{ Key: item }],
+      Objects: [{
+        Key: item
+      }],
       Quiet: false
     }
   }

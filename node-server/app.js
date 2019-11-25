@@ -50,7 +50,7 @@ require('./post')(app)
 require('./comment')(app)
 require('./request')(app)
 require('./event')(app)
-require('./sub-category')(app)
+require('./sub-community')(app)
 
 // Index Route
 app.get('/', (req, res) => {
@@ -63,5 +63,5 @@ app.get('*', (req, res) => {
 
 // Start Server
 app.listen(port, () => {
-  console.log('3...2...1... fire on port ' + port)
+  console.log('3...2...1... fire on port' + port)
 })

@@ -1,6 +1,6 @@
 const comments = require('./route')
 
-function initComments (app) {
+function initComments(app) {
   app.use('/comments', comments)
 }
 

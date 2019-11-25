@@ -185,23 +185,30 @@ router.delete('/:postId', passport.authenticate('jwt', {
 
 // Add Post Image
 router.post('/:postId/image', passport.authenticate('jwt', {
-  session: false }), function (req, res, next) {
+  session: false
+}), function (req, res, next) {
   req.file_path = 'posts/images/' + detector.getId(req.headers.who, req.user) + '/' + Date.now().toString() + '/'
 
   Post.getPostById(req.params.postId, (err, post) => {
     if (err) {
-      return res.status(400).json({ msg: err.toString() })
+      return res.status(400).json({
+        msg: err.toString()
+      })
     }
 
     if (!post) {
-      return res.status(404).json({ msg: 'Post not found' })
+      return res.status(404).json({
+        msg: 'Post not found'
+      })
     }
 
     singleUpload(req, res, function (err, some) {
       if (err) return res.status(400).json()
       Post.addImage(req.params.postId, req.file.location, (err, updatedPost) => {
         if (err) {
-          return res.status(400).json({ msg: err.toString() })
+          return res.status(400).json({
+            msg: err.toString()
+          })
         }
 
         return res.status(200).json(updatedPost)
@@ -216,24 +223,34 @@ router.delete('/:postId/image', passport.authenticate('jwt', {
 }), (req, res, next) => {
   Post.getPostById(req.params.postId, (err, post) => {
     if (err) {
-      return res.status(400).json({ msg: err.toString() })
+      return res.status(400).json({
+        msg: err.toString()
+      })
     }
 
     if (!post) {
-      return res.status(404).json({ msg: 'Post not found' })
+      return res.status(404).json({
+        msg: 'Post not found'
+      })
     }
 
     Post.removeImage(req.params.postId, req.body.file_item, (err, deletedPostImage) => {
       if (err) {
-        return res.status(400).json({ msg: err.toString() })
+        return res.status(400).json({
+          msg: err.toString()
+        })
       }
 
       if (!deletedPostImage) {
-        return res.status(400).json({ msg: 'Post Image not deleted!' })
+        return res.status(400).json({
+          msg: 'Post Image not deleted!'
+        })
       }
 
       deleteStorageItem(req.body.file_item, (err, deleted) => {
-        if (err) return res.status(400).json({ msg: err.toString() })
+        if (err) return res.status(400).json({
+          msg: err.toString()
+        })
         return res.status(204).json()
       })
     })
@@ -242,16 +259,21 @@ router.delete('/:postId/image', passport.authenticate('jwt', {
 
 // Add Post Video
 router.post('/:postId/video', passport.authenticate('jwt', {
-  session: false }), function (req, res, next) {
+  session: false
+}), function (req, res, next) {
   req.file_path = 'posts/videos/' + detector.getId(req.headers.who, req.user) + '/' + Date.now().toString() + '/'
 
   Post.getPostById(req.params.postId, (err, post) => {
     if (err) {
-      return res.status(400).json({ msg: err.toString() })
+      return res.status(400).json({
+        msg: err.toString()
+      })
     }
 
     if (!post) {
-      return res.status(404).json({ msg: 'Post not found' })
+      return res.status(404).json({
+        msg: 'Post not found'
+      })
     }
 
     singleUpload(req, res, function (err, some) {
@@ -261,7 +283,9 @@ router.post('/:postId/video', passport.authenticate('jwt', {
 
       Post.addVideo(req.params.postId, req.file.location, (err, updatedPost) => {
         if (err) {
-          return res.status(400).json({ msg: err.toString() })
+          return res.status(400).json({
+            msg: err.toString()
+          })
         }
 
         return res.status(200).json(updatedPost)
@@ -276,25 +300,35 @@ router.delete('/:postId/video', passport.authenticate('jwt', {
 }), (req, res, next) => {
   Post.getPostById(req.params.postId, (err, post) => {
     if (err) {
-      return res.status(400).json({ msg: err.toString() })
+      return res.status(400).json({
+        msg: err.toString()
+      })
     }
 
     if (!post) {
-      return res.status(404).json({ msg: 'Post not found' })
+      return res.status(404).json({
+        msg: 'Post not found'
+      })
     }
 
     Post.removeVideo(req.params.postId, req.body.file_item, (err, deletedPostVideo) => {
       if (err) {
-        return res.status(400).json({ msg: err.toString() })
+        return res.status(400).json({
+          msg: err.toString()
+        })
       }
 
       if (!deletedPostVideo) {
-        return res.status(400).json({ msg: 'Post video not deleted!' })
+        return res.status(400).json({
+          msg: 'Post video not deleted!'
+        })
       }
 
       deleteStorageItem(req.body.file_item, (err, deleted) => {
         if (err) {
-          return res.status(400).json({ msg: err.toString() })
+          return res.status(400).json({
+            msg: err.toString()
+          })
         }
 
         return res.status(204).json()

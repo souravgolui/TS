@@ -1,6 +1,6 @@
 const users = require('./route')
 
-function initUser (app) {
+function initUser(app) {
   app.use('/users', users)
 }
 

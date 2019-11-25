@@ -1,6 +1,6 @@
 const communities = require('./route')
 
-function initCommunities (app) {
+function initCommunities(app) {
   app.use('/communities', communities)
 }
 

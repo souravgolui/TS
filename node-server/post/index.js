@@ -1,6 +1,6 @@
 const posts = require('./route')
 
-function initPosts (app) {
+function initPosts(app) {
   app.use('/posts', posts)
 }
 

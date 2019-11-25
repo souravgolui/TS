@@ -9,6 +9,9 @@ const PostSchema = mongoose.Schema({
   community_id: {
     type: String
   },
+  sub_community_id: {
+    type: String
+  },
   user_id: {
     type: String,
     required: true
@@ -45,9 +48,13 @@ module.exports.getPostById = function (id, callback) {
 // List Communities
 module.exports.listPosts = function (filter, callback) {
   var perPage = 25
-  if (filter.per_page) { perPage = parseInt(filter.per_page, 10) }
+  if (filter.per_page) {
+    perPage = parseInt(filter.per_page, 10)
+  }
   var pageNumber = 0
-  if (filter.page_number) { pageNumber = parseInt(filter.page_number, 10) }
+  if (filter.page_number) {
+    pageNumber = parseInt(filter.page_number, 10)
+  }
 
   var sort = {}
   if (filter.sort_field) {
@@ -68,6 +75,11 @@ module.exports.listPosts = function (filter, callback) {
     query['community_id'] = filter.community_id
   }
 
+  // if select any sub community
+  if (filter.sub_community_id) {
+    query['sub_community_id'] = filter.sub_community_id
+  }
+
   if (filter.user_id) {
     query['user_id'] = filter.user_id
   }
@@ -81,46 +93,72 @@ module.exports.listPosts = function (filter, callback) {
 
   if (filter.communities) {
     if (filter.communities.constructor === Array) {
-      query['community_id'] = { '$in': filter.communities }
+      query['community_id'] = {
+        '$in': filter.communities
+      }
     } else {
-      query['community_id'] = { '$in': JSON.parse(filter.communities) }
+      query['community_id'] = {
+        '$in': JSON.parse(filter.communities)
+      }
     }
   } else if (filter.none_community) {
-    query['community_id'] = { '$exists': false }
+    query['community_id'] = {
+      '$exists': false
+    }
   }
 
   if (filter.users) {
     if (filter.users.constructor === Array) {
-      query['user_id'] = { '$in': filter.users }
+      query['user_id'] = {
+        '$in': filter.users
+      }
     } else {
-      query['user_id'] = { '$in': JSON.parse(filter.users) }
+      query['user_id'] = {
+        '$in': JSON.parse(filter.users)
+      }
     }
   }
 
   if (filter.likes) {
-    query['likes'] = { '$in': JSON.parse(filter.likes) }
+    query['likes'] = {
+      '$in': JSON.parse(filter.likes)
+    }
   }
 
   if (filter.article_feed) {
-    query['video_links'] = { '$size': 0 }
-    query['image_links'] = { '$size': 0 }
+    query['video_links'] = {
+      '$size': 0
+    }
+    query['image_links'] = {
+      '$size': 0
+    }
   }
 
   if (filter.start_created_at || filter.end_created_at) {
     var createdAtQuery = {}
-    if (filter.start_created_at) { createdAtQuery['$gt'] = filter.start_created_at }
-    if (filter.end_created_at) { createdAtQuery['$lt'] = filter.end_created_at }
+    if (filter.start_created_at) {
+      createdAtQuery['$gt'] = filter.start_created_at
+    }
+    if (filter.end_created_at) {
+      createdAtQuery['$lt'] = filter.end_created_at
+    }
     query['created_at'] = createdAtQuery
   }
 
   if (filter.start_updated_at || filter.end_updated_at) {
     var updatedAtQuery = {}
-    if (filter.start_updated_at) { updatedAtQuery['$gt'] = filter.start_updated_at }
-    if (filter.end_updated_at) { updatedAtQuery['$lt'] = filter.end_updated_at }
+    if (filter.start_updated_at) {
+      updatedAtQuery['$gt'] = filter.start_updated_at
+    }
+    if (filter.end_updated_at) {
+      updatedAtQuery['$lt'] = filter.end_updated_at
+    }
     query['updated_at'] = updatedAtQuery
   }
 
-  Post.find(query, callback).skip(pageNumber > 0 ? ((pageNumber - 1) * perPage) : 0).limit(perPage).sort(sort)
+  Post.find(query, callback)
+    .skip(pageNumber > 0 ? ((pageNumber - 1) * perPage) : 0)
+    .limit(perPage).sort(sort)
 }
 
 // Update Post
@@ -137,9 +175,17 @@ module.exports.updatePost = function (id, userIdForCheck, updatePost, callback) 
 
 // Like
 module.exports.like = function (id, likedUserId, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$addToSet': { 'likes': likedUserId } }
-  Post.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, post) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$addToSet': {
+      'likes': likedUserId
+    }
+  }
+  Post.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, post) {
     if (err) callback(new Error(err))
     return callback(null, post)
   })
@@ -147,9 +193,17 @@ module.exports.like = function (id, likedUserId, callback) {
 
 // Unlike
 module.exports.unlike = function (id, likedUserId, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$pull': { 'likes': likedUserId } }
-  Post.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, post) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$pull': {
+      'likes': likedUserId
+    }
+  }
+  Post.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, post) {
     if (err) callback(new Error(err))
     return callback(null, post)
   })
@@ -157,9 +211,17 @@ module.exports.unlike = function (id, likedUserId, callback) {
 
 // Add Image
 module.exports.addImage = function (id, imageUrl, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$addToSet': { 'image_links': imageUrl } }
-  Post.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, post) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$addToSet': {
+      'image_links': imageUrl
+    }
+  }
+  Post.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, post) {
     if (err) callback(new Error(err))
     return callback(null, post)
   })
@@ -167,9 +229,17 @@ module.exports.addImage = function (id, imageUrl, callback) {
 
 // Remove Image
 module.exports.removeImage = function (id, imageUrl, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$pull': { 'image_links': imageUrl } }
-  Post.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, post) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$pull': {
+      'image_links': imageUrl
+    }
+  }
+  Post.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, post) {
     if (err) callback(new Error(err))
     return callback(null, post)
   })
@@ -177,9 +247,17 @@ module.exports.removeImage = function (id, imageUrl, callback) {
 
 // Add Video
 module.exports.addVideo = function (id, videoUrl, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$addToSet': { 'video_links': videoUrl } }
-  Post.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, post) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$addToSet': {
+      'video_links': videoUrl
+    }
+  }
+  Post.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, post) {
     if (err) callback(new Error(err))
     return callback(null, post)
   })
@@ -187,9 +265,17 @@ module.exports.addVideo = function (id, videoUrl, callback) {
 
 // Remove Video
 module.exports.removeVideo = function (id, videoUrl, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$pull': { 'video_links': videoUrl } }
-  Post.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, post) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$pull': {
+      'video_links': videoUrl
+    }
+  }
+  Post.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, post) {
     if (err) callback(new Error(err))
     return callback(null, post)
   })

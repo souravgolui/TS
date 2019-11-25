@@ -107,7 +107,9 @@ const UserSchema = mongoose.Schema({
 })
 
 const User = module.exports = mongoose.model('User', UserSchema)
-UserSchema.index({ location: '2dsphere' })
+UserSchema.index({
+  location: '2dsphere'
+})
 
 module.exports.getUserById = function (id, callback) {
   User.findById(id, callback)
@@ -129,9 +131,13 @@ module.exports.getUserByEmail = function (email, callback) {
 
 module.exports.listUsers = function (filter, callback) {
   var perPage = 25
-  if (filter.per_page) { perPage = parseInt(filter.per_page, 10) }
+  if (filter.per_page) {
+    perPage = parseInt(filter.per_page, 10)
+  }
   var pageNumber = 0
-  if (filter.page_number) { pageNumber = parseInt(filter.page_number, 10) }
+  if (filter.page_number) {
+    pageNumber = parseInt(filter.page_number, 10)
+  }
 
   var sort = {}
   if (filter.sort_field) {
@@ -146,11 +152,15 @@ module.exports.listUsers = function (filter, callback) {
 
   var query = {
     deleted_at: null,
-    connected_profile_id: {'$exists': false}
+    connected_profile_id: {
+      '$exists': false
+    }
   }
 
   if (filter.nin) {
-    query['_id'] = { '$nin': filter.nin }
+    query['_id'] = {
+      '$nin': filter.nin
+    }
   }
 
   if (filter.first_name) {
@@ -206,43 +216,65 @@ module.exports.listUsers = function (filter, callback) {
   }
 
   if (filter.followers) {
-    query['followers'] = { '$in': JSON.parse(filter.followers) }
+    query['followers'] = {
+      '$in': JSON.parse(filter.followers)
+    }
   }
 
   if (filter.following) {
-    query['following'] = { '$in': JSON.parse(filter.following) }
+    query['following'] = {
+      '$in': JSON.parse(filter.following)
+    }
   }
 
   if (filter.communities) {
-    query['communities'] = { '$in': JSON.parse(filter.communities) }
+    query['communities'] = {
+      '$in': JSON.parse(filter.communities)
+    }
   }
 
   if (filter.events) {
-    query['events'] = { '$in': JSON.parse(filter.events) }
+    query['events'] = {
+      '$in': JSON.parse(filter.events)
+    }
   }
 
   if (filter.therapists) {
-    query['therapists'] = { '$in': JSON.parse(filter.therapists) }
+    query['therapists'] = {
+      '$in': JSON.parse(filter.therapists)
+    }
   }
 
   if (filter.start_birthday_at || filter.end_birthday_at) {
     var birthdayQuery = {}
-    if (filter.start_birthday_at) { birthdayQuery['$gt'] = filter.start_birthday_at }
-    if (filter.end_birthday_at) { birthdayQuery['$lt'] = filter.end_birthday_at }
+    if (filter.start_birthday_at) {
+      birthdayQuery['$gt'] = filter.start_birthday_at
+    }
+    if (filter.end_birthday_at) {
+      birthdayQuery['$lt'] = filter.end_birthday_at
+    }
     query['birthday'] = birthdayQuery
   }
 
   if (filter.start_created_at || filter.end_created_at) {
     var createdAtQuery = {}
-    if (filter.start_created_at) { createdAtQuery['$gt'] = filter.start_created_at }
-    if (filter.end_created_at) { createdAtQuery['$lt'] = filter.end_created_at }
+    if (filter.start_created_at) {
+      createdAtQuery['$gt'] = filter.start_created_at
+    }
+    if (filter.end_created_at) {
+      createdAtQuery['$lt'] = filter.end_created_at
+    }
     query['created_at'] = createdAtQuery
   }
 
   if (filter.start_updated_at || filter.end_updated_at) {
     var updatedAtQuery = {}
-    if (filter.start_updated_at) { updatedAtQuery['$gt'] = filter.start_updated_at }
-    if (filter.end_updated_at) { updatedAtQuery['$lt'] = filter.end_updated_at }
+    if (filter.start_updated_at) {
+      updatedAtQuery['$gt'] = filter.start_updated_at
+    }
+    if (filter.end_updated_at) {
+      updatedAtQuery['$lt'] = filter.end_updated_at
+    }
     query['updated_at'] = updatedAtQuery
   }
 
@@ -255,7 +287,9 @@ module.exports.nearUsers = function (filter, callback) {
   }
 
   if (filter.nin) {
-    query['_id'] = { '$nin': filter.nin }
+    query['_id'] = {
+      '$nin': filter.nin
+    }
   }
 
   if (filter.first_name) {
@@ -311,45 +345,68 @@ module.exports.nearUsers = function (filter, callback) {
   }
 
   if (filter.followers) {
-    query['followers'] = { '$in': JSON.parse(filter.followers) }
+    query['followers'] = {
+      '$in': JSON.parse(filter.followers)
+    }
   }
 
   if (filter.following) {
-    query['following'] = { '$in': JSON.parse(filter.following) }
+    query['following'] = {
+      '$in': JSON.parse(filter.following)
+    }
   }
 
   if (filter.communities) {
-    query['communities'] = { '$in': JSON.parse(filter.communities) }
+    query['communities'] = {
+      '$in': JSON.parse(filter.communities)
+    }
   }
 
   if (filter.therapists) {
-    query['therapists'] = { '$in': JSON.parse(filter.therapists) }
+    query['therapists'] = {
+      '$in': JSON.parse(filter.therapists)
+    }
   }
 
   if (filter.start_birthday_at || filter.end_birthday_at) {
     var birthdayQuery = {}
-    if (filter.start_birthday_at) { birthdayQuery['$gt'] = filter.start_birthday_at }
-    if (filter.end_birthday_at) { birthdayQuery['$lt'] = filter.end_birthday_at }
+    if (filter.start_birthday_at) {
+      birthdayQuery['$gt'] = filter.start_birthday_at
+    }
+    if (filter.end_birthday_at) {
+      birthdayQuery['$lt'] = filter.end_birthday_at
+    }
     query['birthday'] = birthdayQuery
   }
 
   if (filter.start_created_at || filter.end_created_at) {
     var createdAtQuery = {}
-    if (filter.start_created_at) { createdAtQuery['$gt'] = filter.start_created_at }
-    if (filter.end_created_at) { createdAtQuery['$lt'] = filter.end_created_at }
+    if (filter.start_created_at) {
+      createdAtQuery['$gt'] = filter.start_created_at
+    }
+    if (filter.end_created_at) {
+      createdAtQuery['$lt'] = filter.end_created_at
+    }
     query['created_at'] = createdAtQuery
   }
 
   if (filter.start_updated_at || filter.end_updated_at) {
     var updatedAtQuery = {}
-    if (filter.start_updated_at) { updatedAtQuery['$gt'] = filter.start_updated_at }
-    if (filter.end_updated_at) { updatedAtQuery['$lt'] = filter.end_updated_at }
+    if (filter.start_updated_at) {
+      updatedAtQuery['$gt'] = filter.start_updated_at
+    }
+    if (filter.end_updated_at) {
+      updatedAtQuery['$lt'] = filter.end_updated_at
+    }
     query['updated_at'] = updatedAtQuery
   }
 
   User.aggregate([{
     $geoNear: {
-      near: { type: 'Point', coordinates: JSON.parse(filter.location) },
+      near: {
+        type: 'Point',
+        coordinates: JSON.parse(filter.location)
+      },
       limit: parseInt(filter.limit, 10),
       maxDistance: parseInt(filter.max_distance, 10), // meters
       query: query,
@@ -359,7 +416,9 @@ module.exports.nearUsers = function (filter, callback) {
       spherical: true
     }
   }]).exec((err, users) => {
-    if (err) { callback(new Error(err)) }
+    if (err) {
+      callback(new Error(err))
+    }
     return callback(null, users)
   })
 }
@@ -373,19 +432,23 @@ module.exports.createUser = function (newUser, callback) {
     })
   } else {
     bcrypt.genSalt(10, (err, salt) => {
-      if (err) { return callback(new Error(err)) }
+      if (err) {
+        return callback(new Error(err))
+      }
       bcrypt.hash(newUser.password, salt, (err, hash) => {
-        if (err) { return callback(new Error(err)) }
+        if (err) {
+          return callback(new Error(err))
+        }
         newUser.password = hash
         newUser.email_activation_key = crypto.randomBytes(20).toString('hex')
         newUser.save(function (err) {
           if (err) return callback(new Error(err))
 
           var content = '<p>Hi <b>' + newUser.first_name + ' ' +
-          newUser.last_name + '</b>,</p>' +
-          '<p>Please confirm your email address for new account.</p>' +
-          '<p>' + config.APPFULLPATH + '/users/' + newUser._id.toString() +
-          '/verify/' + newUser.email_activation_key + '</p>'
+            newUser.last_name + '</b>,</p>' +
+            '<p>Please confirm your email address for new account.</p>' +
+            '<p>' + config.APPFULLPATH + '/users/' + newUser._id.toString() +
+            '/verify/' + newUser.email_activation_key + '</p>'
 
           var mailOptions = {
             to: newUser.email,
@@ -414,15 +477,30 @@ module.exports.updateUser = function (id, userIdForCheck, updateUser, callback) 
 
 // Follow User
 module.exports.followUser = function (id, userId, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$addToSet': { 'following': userId } }
-  User.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, user) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$addToSet': {
+      'following': userId
+    }
+  }
+  User.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, user) {
     if (err) callback(new Error(err))
 
-    User.findOneAndUpdate({ '_id': userId }, { '$addToSet': { 'followers': id } },
-      { 'new': true }, function (err, otherUser) {
-        if (err) callback(new Error(err))
-      })
+    User.findOneAndUpdate({
+      '_id': userId
+    }, {
+      '$addToSet': {
+        'followers': id
+      }
+    }, {
+      'new': true
+    }, function (err, otherUser) {
+      if (err) callback(new Error(err))
+    })
 
     return callback(null, user)
   })
@@ -430,15 +508,30 @@ module.exports.followUser = function (id, userId, callback) {
 
 // Unfollow User
 module.exports.unfollowUser = function (id, userId, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$pull': { 'following': userId } }
-  User.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, user) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$pull': {
+      'following': userId
+    }
+  }
+  User.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, user) {
     if (err) callback(new Error(err))
 
-    User.findOneAndUpdate({ '_id': userId }, { '$pull': { 'followers': id } },
-      { 'new': true }, function (err, otherUser) {
-        if (err) callback(new Error(err))
-      })
+    User.findOneAndUpdate({
+      '_id': userId
+    }, {
+      '$pull': {
+        'followers': id
+      }
+    }, {
+      'new': true
+    }, function (err, otherUser) {
+      if (err) callback(new Error(err))
+    })
 
     return callback(null, user)
   })
@@ -446,9 +539,17 @@ module.exports.unfollowUser = function (id, userId, callback) {
 
 // Join Community
 module.exports.joinCommunity = function (id, communityId, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$addToSet': { 'communities': communityId } }
-  User.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, user) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$addToSet': {
+      'communities': communityId
+    }
+  }
+  User.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, user) {
     if (err) callback(new Error(err))
     return callback(null, user)
   })
@@ -456,9 +557,17 @@ module.exports.joinCommunity = function (id, communityId, callback) {
 
 // Left Community
 module.exports.leftCommunity = function (id, communityId, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$pull': { 'communities': communityId } }
-  User.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, user) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$pull': {
+      'communities': communityId
+    }
+  }
+  User.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, user) {
     if (err) callback(new Error(err))
     return callback(null, user)
   })
@@ -466,9 +575,17 @@ module.exports.leftCommunity = function (id, communityId, callback) {
 
 // Join Event
 module.exports.joinEvent = function (id, eventId, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$addToSet': { 'events': eventId } }
-  User.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, user) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$addToSet': {
+      'events': eventId
+    }
+  }
+  User.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, user) {
     if (err) callback(new Error(err))
     return callback(null, user)
   })
@@ -476,9 +593,17 @@ module.exports.joinEvent = function (id, eventId, callback) {
 
 // Left Event
 module.exports.leftEvent = function (id, eventId, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$pull': { 'communities': eventId } }
-  User.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, user) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$pull': {
+      'communities': eventId
+    }
+  }
+  User.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, user) {
     if (err) callback(new Error(err))
     return callback(null, user)
   })
@@ -486,9 +611,17 @@ module.exports.leftEvent = function (id, eventId, callback) {
 
 // add blacklist
 module.exports.addBlackList = function (id, userId, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$addToSet': { 'black_list': userId } }
-  User.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, user) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$addToSet': {
+      'black_list': userId
+    }
+  }
+  User.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, user) {
     if (err) callback(new Error(err))
     return callback(null, user)
   })
@@ -496,9 +629,17 @@ module.exports.addBlackList = function (id, userId, callback) {
 
 // remove blacklist
 module.exports.removeBlackList = function (id, userId, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$pull': { 'black_list': userId } }
-  User.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, user) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$pull': {
+      'black_list': userId
+    }
+  }
+  User.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, user) {
     if (err) callback(new Error(err))
     return callback(null, user)
   })
@@ -506,9 +647,17 @@ module.exports.removeBlackList = function (id, userId, callback) {
 
 // Add Therapist
 module.exports.addTherapist = function (id, therapistId, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$addToSet': { 'therapists': therapistId } }
-  User.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, user) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$addToSet': {
+      'therapists': therapistId
+    }
+  }
+  User.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, user) {
     if (err) callback(new Error(err))
     return callback(null, user)
   })
@@ -516,9 +665,17 @@ module.exports.addTherapist = function (id, therapistId, callback) {
 
 // Remove Therapist
 module.exports.removeTherapist = function (id, therapistId, callback) {
-  var query = { '_id': id }
-  var updateQuery = { '$pull': { 'therapists': therapistId } }
-  User.findOneAndUpdate(query, updateQuery, { 'new': true }, function (err, user) {
+  var query = {
+    '_id': id
+  }
+  var updateQuery = {
+    '$pull': {
+      'therapists': therapistId
+    }
+  }
+  User.findOneAndUpdate(query, updateQuery, {
+    'new': true
+  }, function (err, user) {
     if (err) callback(new Error(err))
     return callback(null, user)
   })
@@ -527,9 +684,13 @@ module.exports.removeTherapist = function (id, therapistId, callback) {
 // Change User
 module.exports.changePassword = function (user, password, callback) {
   bcrypt.genSalt(10, (err, salt) => {
-    if (err) { callback(new Error(err)) }
+    if (err) {
+      callback(new Error(err))
+    }
     bcrypt.hash(password, salt, (err, hash) => {
-      if (err) { callback(new Error(err)) }
+      if (err) {
+        callback(new Error(err))
+      }
       user.password = hash
       user.forgot_password_token = ''
       user.save(callback)
@@ -539,7 +700,9 @@ module.exports.changePassword = function (user, password, callback) {
 
 module.exports.comparePassword = function (password, hash, callback) {
   bcrypt.compare(password, hash, (err, isMatch) => {
-    if (err) { throw err }
+    if (err) {
+      throw err
+    }
 
     callback(null, isMatch)
   })

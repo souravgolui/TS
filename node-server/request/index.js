@@ -1,6 +1,6 @@
 const requests = require('./route')
 
-function initRequests (app) {
+function initRequests(app) {
   app.use('/requests', requests)
 }
 

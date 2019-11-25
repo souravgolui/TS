@@ -1,6 +1,6 @@
 const events = require('./route')
 
-function initEvents (app) {
+function initEvents(app) {
   app.use('/events', events)
 }
 

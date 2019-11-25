@@ -109,12 +109,15 @@ router.delete('/:eventId', passport.authenticate('jwt', {
 
 // Add Event Cover Image
 router.post('/:eventId/cover_image', passport.authenticate('jwt', {
-  session: false }), function (req, res, next) {
+  session: false
+}), function (req, res, next) {
   req.file_path = 'events/' + req.params.eventId + '/cover_image/' + Date.now().toString() + '/'
 
   Event.getEventById(req.params.eventId, (err, event) => {
     if (err) {
-      return res.status(400).json({ msg: err.toString() })
+      return res.status(400).json({
+        msg: err.toString()
+      })
     }
 
     singleUpload(req, res, function (err, some) {
@@ -122,20 +125,25 @@ router.post('/:eventId/cover_image', passport.authenticate('jwt', {
         return res.status(400).json()
       }
 
-      Event.updateEvent(req.params.eventId,
-        { 'cover_image': req.file.location }, (err, updatedEvent) => {
+      Event.updateEvent(req.params.eventId, {
+        'cover_image': req.file.location
+      }, (err, updatedEvent) => {
+        if (err) {
+          return res.status(400).json({
+            msg: err.toString()
+          })
+        }
+
+        deleteStorageItem(event.cover_image, (err, deleted) => {
           if (err) {
-            return res.status(400).json({ msg: err.toString() })
+            return res.status(400).json({
+              msg: err.toString()
+            })
           }
 
-          deleteStorageItem(event.cover_image, (err, deleted) => {
-            if (err) {
-              return res.status(400).json({ msg: err.toString() })
-            }
-
-            return res.status(200).json(updatedEvent)
-          })
+          return res.status(200).json(updatedEvent)
         })
+      })
     })
   })
 })

@@ -115,16 +115,21 @@ router.delete('/:categoryId', passport.authenticate('jwt', {
 
 // Add Category Cover Image
 router.post('/:categoryId/cover_image', passport.authenticate('jwt', {
-  session: false }), function (req, res, next) {
+  session: false
+}), function (req, res, next) {
   if (req.user.role !== 'admin') {
-    return res.status(401).json({ msg: 'only update admin' })
+    return res.status(401).json({
+      msg: 'only update admin'
+    })
   }
 
   req.file_path = 'categories/' + req.params.categoryId + '/cover_image/' + Date.now().toString() + '/'
 
   Category.getCategoryById(req.params.categoryId, (err, category) => {
     if (err) {
-      return res.status(400).json({ msg: err.toString() })
+      return res.status(400).json({
+        msg: err.toString()
+      })
     }
 
     singleUpload(req, res, function (err, some) {
@@ -132,20 +137,25 @@ router.post('/:categoryId/cover_image', passport.authenticate('jwt', {
         return res.status(400).json()
       }
 
-      Category.updateCategory(req.params.categoryId,
-        { 'cover_image': req.file.location }, (err, updatedCategory) => {
+      Category.updateCategory(req.params.categoryId, {
+        'cover_image': req.file.location
+      }, (err, updatedCategory) => {
+        if (err) {
+          return res.status(400).json({
+            msg: err.toString()
+          })
+        }
+
+        deleteStorageItem(category.cover_image, (err, deleted) => {
           if (err) {
-            return res.status(400).json({ msg: err.toString() })
+            return res.status(400).json({
+              msg: err.toString()
+            })
           }
 
-          deleteStorageItem(category.cover_image, (err, deleted) => {
-            if (err) {
-              return res.status(400).json({ msg: err.toString() })
-            }
-
-            return res.status(200).json(updatedCategory)
-          })
+          return res.status(200).json(updatedCategory)
         })
+      })
     })
   })
 })

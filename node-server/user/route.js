@@ -58,7 +58,9 @@ router.post('/:userId/clone', passport.authenticate('jwt', {
         })
       }
 
-      User.updateUser(req.params.userId, req.user._id, { 'secret_profile_id': cloneUser._id }, (err, updatedUser) => {
+      User.updateUser(req.params.userId, req.user._id, {
+        'secret_profile_id': cloneUser._id
+      }, (err, updatedUser) => {
         if (err) {
           return res.status(400).json({
             msg: err.toString()
@@ -536,27 +538,30 @@ router.post('/forgot_password/', (req, res, next) => {
 
     let forgotPasswordToken = crypto.randomBytes(20).toString('hex')
 
-    User.updateUser(user.id, user.id,
-      { 'forgot_password_token': forgotPasswordToken }, (err, updatedUser) => {
-        if (err) {
-          return res.status(400).json({ msg: err.toString() })
-        }
-        let content = '<p>Hi <b>' + user.first_name + ' ' +
-          user.last_name + '</b>,</p>' +
-          '<p>Please confirm your email address for change password.</p>' +
-          '<p>' + config.APPFULLPATH + '/users/forgot_password/' + user.id +
-          '/' + forgotPasswordToken + '</p>'
-
-        let mailOptions = {
-          to: user.email,
-          subject: 'I Forgot Password',
-          html: content
-        }
-        sendMail(mailOptions)
-        return res.status(200).json({
-          msg: 'Forgot Password token sent via email.'
+    User.updateUser(user.id, user.id, {
+      'forgot_password_token': forgotPasswordToken
+    }, (err, updatedUser) => {
+      if (err) {
+        return res.status(400).json({
+          msg: err.toString()
         })
+      }
+      let content = '<p>Hi <b>' + user.first_name + ' ' +
+        user.last_name + '</b>,</p>' +
+        '<p>Please confirm your email address for change password.</p>' +
+        '<p>' + config.APPFULLPATH + '/users/forgot_password/' + user.id +
+        '/' + forgotPasswordToken + '</p>'
+
+      let mailOptions = {
+        to: user.email,
+        subject: 'I Forgot Password',
+        html: content
+      }
+      sendMail(mailOptions)
+      return res.status(200).json({
+        msg: 'Forgot Password token sent via email.'
       })
+    })
   })
 })
 
@@ -631,6 +636,7 @@ router.put('/:userId/change_password', passport.authenticate('jwt', {
 
 // Login
 router.post('/login', (req, res, next) => {
+  console.log(req.body);
   const email = req.body.email
   const password = req.body.password
 
@@ -685,14 +691,18 @@ router.post('/:userId/profile_image', passport.authenticate('jwt', {
   session: false
 }), function (req, res, next) {
   if (detector.getId(req.headers.who, req.user).toString() !== req.params.userId) {
-    return res.status(401).json({ msg: 'you can only update your own user' })
+    return res.status(401).json({
+      msg: 'you can only update your own user'
+    })
   }
 
   req.file_path = 'users/' + detector.getId(req.headers.who, req.user) + '/profile_image/' + Date.now().toString() + '/'
 
   User.getUserById(req.params.userId, (err, user) => {
     if (err) {
-      return res.status(400).json({ msg: err.toString() })
+      return res.status(400).json({
+        msg: err.toString()
+      })
     }
 
     singleUpload(req, res, function (err, some) {
@@ -700,20 +710,25 @@ router.post('/:userId/profile_image', passport.authenticate('jwt', {
         return res.status(400).json()
       }
 
-      User.updateUser(req.params.userId, detector.getId(req.headers.who, req.user),
-        { 'profile_image': req.file.location }, (err, updatedUser) => {
+      User.updateUser(req.params.userId, detector.getId(req.headers.who, req.user), {
+        'profile_image': req.file.location
+      }, (err, updatedUser) => {
+        if (err) {
+          return res.status(400).json({
+            msg: err.toString()
+          })
+        }
+
+        deleteStorageItem(user.profile_image, (err, deleted) => {
           if (err) {
-            return res.status(400).json({ msg: err.toString() })
+            return res.status(400).json({
+              msg: err.toString()
+            })
           }
 
-          deleteStorageItem(user.profile_image, (err, deleted) => {
-            if (err) {
-              return res.status(400).json({ msg: err.toString() })
-            }
-
-            return res.status(200).json(updatedUser)
-          })
+          return res.status(200).json(updatedUser)
         })
+      })
     })
   })
 })
@@ -723,14 +738,18 @@ router.post('/:userId/cover_image', passport.authenticate('jwt', {
   session: false
 }), function (req, res, next) {
   if (detector.getId(req.headers.who, req.user).toString() !== req.params.userId) {
-    return res.status(401).json({ msg: 'you can only update your own user' })
+    return res.status(401).json({
+      msg: 'you can only update your own user'
+    })
   }
 
   req.file_path = 'users/' + detector.getId(req.headers.who, req.user) + '/cover_image/' + Date.now().toString() + '/'
 
   User.getUserById(req.params.userId, (err, user) => {
     if (err) {
-      return res.status(400).json({ msg: err.toString() })
+      return res.status(400).json({
+        msg: err.toString()
+      })
     }
 
     singleUpload(req, res, function (err, some) {
@@ -738,20 +757,25 @@ router.post('/:userId/cover_image', passport.authenticate('jwt', {
         return res.status(400).json()
       }
 
-      User.updateUser(req.params.userId, detector.getId(req.headers.who, req.user),
-        { 'cover_image': req.file.location }, (err, updatedUser) => {
+      User.updateUser(req.params.userId, detector.getId(req.headers.who, req.user), {
+        'cover_image': req.file.location
+      }, (err, updatedUser) => {
+        if (err) {
+          return res.status(400).json({
+            msg: err.toString()
+          })
+        }
+
+        deleteStorageItem(user.cover_image, (err, deleted) => {
           if (err) {
-            return res.status(400).json({ msg: err.toString() })
+            return res.status(400).json({
+              msg: err.toString()
+            })
           }
 
-          deleteStorageItem(user.cover_image, (err, deleted) => {
-            if (err) {
-              return res.status(400).json({ msg: err.toString() })
-            }
-
-            return res.status(200).json(updatedUser)
-          })
+          return res.status(200).json(updatedUser)
         })
+      })
     })
   })
 })

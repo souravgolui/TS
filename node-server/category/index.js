@@ -1,6 +1,6 @@
 const categories = require('./route')
 
-function initCategories (app) {
+function initCategories(app) {
   app.use('/categories', categories)
 }
 

@@ -47,9 +47,13 @@ module.exports.getRequestById = function (id, callback) {
 // List Requests
 module.exports.listRequests = function (filter, callback) {
   var perPage = 25
-  if (filter.per_page) { perPage = parseInt(filter.per_page, 10) }
+  if (filter.per_page) {
+    perPage = parseInt(filter.per_page, 10)
+  }
   var pageNumber = 0
-  if (filter.page_number) { pageNumber = parseInt(filter.page_number, 10) }
+  if (filter.page_number) {
+    pageNumber = parseInt(filter.page_number, 10)
+  }
 
   var sort = {}
   if (filter.sort_field) {
@@ -84,15 +88,23 @@ module.exports.listRequests = function (filter, callback) {
 
   if (filter.start_created_at || filter.end_created_at) {
     var createdAtQuery = {}
-    if (filter.start_created_at) { createdAtQuery['$gt'] = filter.start_created_at }
-    if (filter.end_created_at) { createdAtQuery['$lt'] = filter.end_created_at }
+    if (filter.start_created_at) {
+      createdAtQuery['$gt'] = filter.start_created_at
+    }
+    if (filter.end_created_at) {
+      createdAtQuery['$lt'] = filter.end_created_at
+    }
     query['created_at'] = createdAtQuery
   }
 
   if (filter.start_updated_at || filter.end_updated_at) {
     var updatedAtQuery = {}
-    if (filter.start_updated_at) { updatedAtQuery['$gt'] = filter.start_updated_at }
-    if (filter.end_updated_at) { updatedAtQuery['$lt'] = filter.end_updated_at }
+    if (filter.start_updated_at) {
+      updatedAtQuery['$gt'] = filter.start_updated_at
+    }
+    if (filter.end_updated_at) {
+      updatedAtQuery['$lt'] = filter.end_updated_at
+    }
     query['updated_at'] = updatedAtQuery
   }
 
