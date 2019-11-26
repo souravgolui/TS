@@ -10,7 +10,8 @@ const PostSchema = mongoose.Schema({
     type: String
   },
   sub_community_id: {
-    type: String
+    type: String,
+    default: ''
   },
   user_id: {
     type: String,
