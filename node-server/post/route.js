@@ -17,6 +17,10 @@ router.post('/', passport.authenticate('jwt', {
   let newPost = new Post(req.body)
   newPost.user_id = detector.getId(req.headers.who, req.user)
 
+  if(req.body.sub_community_id) {
+    newPost.sub_community_id = req.body.sub_community_id;
+  }
+
   Post.createPost(newPost, (err, post) => {
     if (err) {
       return res.status(400).json({
